@@ -590,7 +590,7 @@ async function saveItem() {
   if (locked) return;
 
   const name = document.getElementById('nameInput').value.trim();
-  const stock = Number(document.getElementById('stockInput').value);
+  const stock = parseFloat(document.getElementById('stockInput').value) || 0;
 
   if (!name) { alert('نام ماده را وارد کنید.'); return; }
   if (!Number.isFinite(stock) || stock < 0) { alert('موجودی واردشده معتبر نیست.'); return; }
