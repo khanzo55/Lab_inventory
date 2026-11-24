@@ -4,8 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>آزمایشگاه</title>
-<!-- اضافه شدن کتابخانه Supabase -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap');
@@ -19,7 +17,9 @@
   --bg: #f5f8fc;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
@@ -74,7 +74,9 @@ header h1 {
   box-shadow: 0 0 0 3px rgba(139,188,233,.13);
 }
 
-.menu-wrap { position: relative; }
+.menu-wrap {
+  position: relative;
+}
 
 .menu-btn {
   width: 42px;
@@ -102,7 +104,9 @@ header h1 {
   animation: appear .2s ease;
 }
 
-.menu.show { display: block; }
+.menu.show {
+  display: block;
+}
 
 .menu button {
   width: 100%;
@@ -117,7 +121,9 @@ header h1 {
   transition: .2s;
 }
 
-.menu button:hover { background: #f0f6fd; }
+.menu button:hover {
+  background: #f0f6fd;
+}
 
 .grid {
   display: grid;
@@ -152,8 +158,16 @@ header h1 {
   box-shadow: 0 9px 20px rgba(90,150,210,.13);
 }
 
-.item .name { font-size: 13px; font-weight: 600; text-align: center; }
-.item .amount { font-size: 11px; color: var(--muted); }
+.item .name {
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.item .amount {
+  font-size: 11px;
+  color: var(--muted);
+}
 
 .item.selected {
   background: #e94f5b;
@@ -162,7 +176,9 @@ header h1 {
   transform: scale(.97);
 }
 
-.item.selected .amount { color: white; }
+.item.selected .amount {
+  color: white;
+}
 
 .item.selected::after {
   content: "✓";
@@ -171,6 +187,10 @@ header h1 {
   left: 10px;
   font-size: 15px;
   font-weight: bold;
+}
+
+.item.locked {
+  cursor: default;
 }
 
 .empty {
@@ -207,547 +227,10 @@ header h1 {
   transition: .25s;
 }
 
-.add-btn:hover { transform: translateY(-4px) scale(1.05); box-shadow: 0 10px 25px rgba(85,150,210,.4); }
-.add-btn:active { transform: scale(.92); }
-
-.delete-bar {
-  display: none;
-  position: fixed;
-  bottom: 18px;
-  left: 15px;
-  right: 15px;
-  background: white;
-  border: 1px solid #e8edf3;
-  border-radius: 17px;
-  padding: 12px;
-  box-shadow: 0 8px 30px rgba(30,50,80,.15);
-  z-index: 8;
-  align-items: center;
-  justify-content: space-between;
-  animation: slideUp .25s ease;
+.add-btn:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 10px 25px rgba(85,150,210,.4);
 }
 
-.delete-bar.show { display: flex; }
-.delete-bar span { font-size: 12px; color: #667789; }
-.delete-actions { display: flex; gap: 8px; }
-
-.delete-actions button {
-  border: none;
-  border-radius: 10px;
-  padding: 9px 15px;
-  font-family: inherit;
-  font-size: 11px;
-  cursor: pointer;
-}
-
-.confirm-delete { color: white; background: #e65b65; }
-.cancel-delete { color: #60758b; background: #edf2f7; }
-
-.footer-note {
-  text-align: center;
-  color: #a0acb9;
-  font-size: 10px;
-  padding: 35px 10px 15px;
-}
-
-.modal-bg {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(28,43,60,.35);
-  z-index: 20;
-  align-items: center;
-  justify-content: center;
-  padding: 18px;
-  backdrop-filter: blur(3px);
-}
-
-.modal-bg.show { display: flex; }
-
-.modal {
-  background: white;
-  width: 100%;
-  max-width: 390px;
-  border-radius: 21px;
-  padding: 22px;
-  box-shadow: 0 15px 50px rgba(20,40,70,.2);
-  animation: appear .25s ease;
-}
-
-.modal h3 { margin: 0 0 18px; font-size: 17px; color: #526f8e; }
-.field { margin-bottom: 13px; }
-.field label { display: block; font-size: 11px; color: #8292a3; margin-bottom: 6px; }
-
-.field input, .field select {
-  width: 100%;
-  border: 1px solid #e5ebf2;
-  border-radius: 11px;
-  padding: 11px;
-  font-family: inherit;
-  font-size: 12px;
-  outline: none;
-  background: #fbfdff;
-}
-
-.field input:focus, .field select:focus { border-color: #8bbce9; }
-
-.stock-control { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 17px 0; }
-
-.stock-control button {
-  border: none;
-  background: #eaf4ff;
-  color: #6599cc;
-  width: 38px;
-  height: 38px;
-  border-radius: 12px;
-  font-size: 22px;
-  cursor: pointer;
-}
-
-.stock-control input { width: 100px; text-align: center; font-size: 16px; font-weight: 700; }
-
-.step-list { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
-
-.step-list button {
-  border: 1px solid #e4edf6;
-  background: #f5f9fd;
-  color: #6685a3;
-  border-radius: 8px;
-  padding: 6px 9px;
-  font-family: inherit;
-  font-size: 10px;
-  cursor: pointer;
-}
-
-.modal-actions { display: flex; gap: 9px; margin-top: 18px; }
-
-.modal-actions button {
-  flex: 1;
-  border: none;
-  border-radius: 11px;
-  padding: 11px;
-  font-family: inherit;
-  font-size: 12px;
-  cursor: pointer;
-}
-
-.save-btn { background: #8bbce9; color: white; }
-.close-btn { background: #edf2f7; color: #68798b; }
-.danger-btn { background: #fff0f1; color: #d94f59; }
-
-@keyframes appear { from { opacity: 0; transform: translateY(9px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
-@keyframes slideUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
-
-@media(max-width: 420px) {
-  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-  header { height: 95px; }
-}
-</style>
-</head>
-
-<body>
-
-<header>
-  <h1>آزمایشگاه</h1>
-</header>
-
-<div class="top-tools">
-  <input class="search" id="search" placeholder="جستجوی مواد..." oninput="render()">
-
-  <div class="menu-wrap">
-    <button class="menu-btn" onclick="toggleMenu()">⋮</button>
-    <div class="menu" id="menu">
-      <button onclick="toggleDeleteMode()">انتخاب مواد برای حذف</button>
-      <button onclick="toggleLock()" id="lockOption">قفل تغییرات</button>
-      <button onclick="backup()">دریافت نسخه پشتیبان</button>
-      <button onclick="document.getElementById('restoreFile').click()">بازیابی نسخه پشتیبان</button>
-      <button onclick="clearSearch()">پاک کردن جستجو</button>
-    </div>
-  </div>
-</div>
-
-<div class="grid" id="grid"></div>
-
-<div class="footer-note">
-  لطفاً پس از استفاده، مواد را در جای خود قرار دهید. با تشکر
-</div>
-
-<div class="add-area" id="addArea">
-  <button class="add-btn" onclick="addItem()" title="افزودن ماده">+</button>
-</div>
-
-<div class="delete-bar" id="deleteBar">
-  <span id="selectedCount">۰ ماده انتخاب شده</span>
-  <div class="delete-actions">
-    <button class="cancel-delete" onclick="cancelDelete()">انصراف</button>
-    <button class="confirm-delete" onclick="deleteSelected()">حذف</button>
-  </div>
-</div>
-
-<input type="file" id="restoreFile" accept=".json" hidden onchange="restoreBackup(event)">
-
-<div class="modal-bg" id="modalBg">
-  <div class="modal">
-    <h3 id="modalTitle">مشخصات ماده</h3>
-
-    <div class="field">
-      <label>نام ماده</label>
-      <input id="nameInput" placeholder="نام ماده را وارد کنید">
-    </div>
-
-    <div class="field">
-      <label>موجودی</label>
-      <div class="stock-control">
-        <button onclick="changeStock(1)">+</button>
-        <input id="stockInput" type="number" step="any" value="0">
-        <button onclick="changeStock(-1)">−</button>
-      </div>
-      <label>مقدار تغییر موجودی</label>
-      <div class="step-list">
-        <button onclick="setStep(0.01)">۰٫۰۱</button>
-        <button onclick="setStep(0.1)">۰٫۱</button>
-        <button onclick="setStep(0.5)">۰٫۵</button>
-        <button onclick="setStep(1)">۱</button>
-        <button onclick="setStep(5)">۵</button>
-        <button onclick="setStep(10)">۱۰</button>
-        <button onclick="setStep(50)">۵۰</button>
-        <button onclick="setStep(100)">۱۰۰</button>
-      </div>
-    </div>
-
-    <div class="field">
-      <label>واحد اندازه‌گیری</label>
-      <select id="unitInput">
-        <option value="گرم">گرم</option>
-        <option value="کیلوگرم">کیلوگرم</option>
-        <option value="میلی‌لیتر">میلی‌لیتر</option>
-        <option value="لیتر">لیتر</option>
-        <option value="عدد">عدد</option>
-        <option value="بسته">بسته</option>
-      </select>
-    </div>
-
-    <div class="field">
-      <label>محل نگهداری</label>
-      <input id="locationInput" placeholder="مثلاً قفسه شماره ۱">
-    </div>
-
-    <div class="field">
-      <label>دسته‌بندی</label>
-      <input id="categoryInput" placeholder="مثلاً حلال، رزین، پودر...">
-    </div>
-
-    <div class="modal-actions">
-      <button class="save-btn" onclick="saveItem()">ذخیره</button>
-      <button class="close-btn" onclick="closeModal()">بستن</button>
-    </div>
-  </div>
-</div>
-
-<script>
-// ==========================================
-// تنظیمات اتصال به Supabase
-// ==========================================
-const SUPABASE_URL = 'https://oqwpileoqzjpvtpwqizf.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_ceKhuK3dOrgx37V-1fNvxQ_qigzzkoy';
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-let items = []; 
-let locked = false;
-let deleteMode = false;
-let selectedIds = []; // حالا به جای ایندکس، آیدی ذخیره می‌کنیم
-let editingId = null;
-let step = 1;
-
-// ==========================================
-// توابع ارتباط با دیتابیس
-// ==========================================
-
-async function loadItems() {
-  const { data, error } = await supabaseClient
-    .from('lab_items')
-    .select('*')
-    .order('id', { ascending: true });
-
-  if (error) {
-    console.error('خطا در دریافت اطلاعات:', error);
-    return;
-  }
-  
-  items = data || [];
-  render();
-}
-
-function subscribeToChanges() {
-  supabaseClient
-    .channel('lab-items-channel')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'lab_items' }, (payload) => {
-      // اگر تغییری رخ داد، لیست را دوباره بارگذاری می‌کنیم
-      loadItems();
-    })
-    .subscribe();
-}
-
-// ==========================================
-// توابع رابط کاربری (UI)
-// ==========================================
-
-function render() {
-  const grid = document.getElementById('grid');
-  const query = document.getElementById('search').value.trim().toLowerCase();
-  grid.innerHTML = '';
-
-  const filtered = items.filter(item => item.name.toLowerCase().includes(query));
-
-  if (!filtered.length) {
-    grid.innerHTML = '<div class="empty">هنوز ماده‌ای ثبت نشده است</div>';
-  }
-
-  filtered.forEach(item => {
-    const card = document.createElement('div');
-    card.className = 'item' + (selectedIds.includes(item.id) ? ' selected' : '');
-    
-    const name = document.createElement('div');
-    name.className = 'name';
-    name.textContent = item.name || 'ماده جدید';
-
-    const amount = document.createElement('div');
-    amount.className = 'amount';
-    amount.textContent = `${item.stock ?? 0} ${item.unit || 'گرم'}`;
-
-    card.append(name, amount);
-    
-    card.onclick = () => {
-      if (deleteMode) {
-        if (selectedIds.includes(item.id)) {
-          selectedIds = selectedIds.filter(id => id !== item.id);
-        } else {
-          selectedIds.push(item.id);
-        }
-        updateDeleteBar();
-        render();
-      } else {
-        openEditor(item);
-      }
-    };
-
-    grid.appendChild(card);
-  });
-}
-
-function toggleMenu() {
-  document.getElementById('menu').classList.toggle('show');
-}
-
-document.addEventListener('click', e => {
-  if (!e.target.closest('.menu-wrap')) {
-    document.getElementById('menu').classList.remove('show');
-  }
-});
-
-function addItem() {
-  if (locked) {
-    alert('ابتدا قفل تغییرات را باز کنید.');
-    return;
-  }
-  if (deleteMode) return;
-
-  editingId = null;
-  document.getElementById('modalTitle').textContent = 'افزودن ماده جدید';
-  fillForm({name:'', stock:0, unit:'گرم', location:'', category:''});
-  document.getElementById('modalBg').classList.add('show');
-}
-
-function openEditor(item) {
-  editingId = item.id;
-  document.getElementById('modalTitle').textContent = 'مشخصات ماده';
-  fillForm(item);
-  document.getElementById('modalBg').classList.add('show');
-}
-
-function fillForm(item) {
-  document.getElementById('nameInput').value = item.name || '';
-  document.getElementById('stockInput').value = item.stock || 0;
-  document.getElementById('unitInput').value = item.unit || 'گرم';
-  document.getElementById('locationInput').value = item.location || '';
-  document.getElementById('categoryInput').value = item.category || '';
-
-  const canEdit = !locked;
-  document.getElementById('nameInput').disabled = !canEdit;
-  document.getElementById('stockInput').disabled = !canEdit;
-  document.getElementById('unitInput').disabled = !canEdit;
-  document.getElementById('locationInput').disabled = !canEdit;
-  document.getElementById('categoryInput').disabled = !canEdit;
-
-  document.querySelectorAll('.stock-control button, .step-list button')
-    .forEach(button => button.disabled = !canEdit);
-
-  document.querySelector('.save-btn').disabled = !canEdit;
-  document.querySelector('.save-btn').style.opacity = canEdit ? '1' : '.45';
-}
-
-async function saveItem() {
-  if (locked) return;
-
-  const name = document.getElementById('nameInput').value.trim();
-  const stock = parseFloat(document.getElementById('stockInput').value) || 0;
-
-  if (!name) { alert('نام ماده را وارد کنید.'); return; }
-  if (!Number.isFinite(stock) || stock < 0) { alert('موجودی واردشده معتبر نیست.'); return; }
-
-  const data = {
-    name: name,
-    stock: stock,
-    unit: document.getElementById('unitInput').value,
-    location: document.getElementById('locationInput').value.trim(),
-    category: document.getElementById('categoryInput').value.trim()
-  };
-
-  let error;
-  if (editingId === null) {
-    // رکورد جدید
-    ({ error } = await supabaseClient.from('lab_items').insert([data]));
-  } else {
-    // ویرایش رکورد موجود
-    ({ error } = await supabaseClient.from('lab_items').update(data).eq('id', editingId));
-  }
-
-  if (error) {
-    console.error(error);
-    alert('خطا در ذخیره‌سازی. لطفاً دوباره تلاش کنید.');
-    return;
-  }
-
-  closeModal();
-}
-
-function changeStock(direction) {
-  const input = document.getElementById('stockInput');
-  const current = Number(input.value) || 0;
-  input.value = Math.max(0, current + direction * step);
-}
-
-function setStep(value) {
-  step = value;
-}
-
-function closeModal() {
-  document.getElementById('modalBg').classList.remove('show');
-}
-
-function toggleDeleteMode() {
-  if (locked) {
-    alert('ابتدا قفل تغییرات را باز کنید.');
-    return;
-  }
-
-  deleteMode = !deleteMode;
-  selectedIds = [];
-  document.getElementById('menu').classList.remove('show');
-  document.getElementById('addArea').style.display = deleteMode ? 'none' : 'flex';
-  updateDeleteBar();
-  render();
-}
-
-function updateDeleteBar() {
-  const bar = document.getElementById('deleteBar');
-  bar.classList.toggle('show', deleteMode);
-  document.getElementById('selectedCount').textContent = `${selectedIds.length} ماده انتخاب شده`;
-}
-
-function cancelDelete() {
-  selectedIds = [];
-  deleteMode = false;
-  document.getElementById('addArea').style.display = 'flex';
-  updateDeleteBar();
-  render();
-}
-
-async function deleteSelected() {
-  if (!selectedIds.length) {
-    alert('ابتدا حداقل یک ماده را انتخاب کنید.');
-    return;
-  }
-
-  if (!confirm(`آیا از حذف ${selectedIds.length} ماده انتخاب‌شده مطمئن هستید؟`)) return;
-
-  const { error } = await supabaseClient.from('lab_items').delete().in('id', selectedIds);
-
-  if (error) {
-    console.error(error);
-    alert('خطا در حذف. لطفاً دوباره تلاش کنید.');
-    return;
-  }
-
-  selectedIds = [];
-  deleteMode = false;
-  document.getElementById('addArea').style.display = 'flex';
-  updateDeleteBar();
-}
-
-function toggleLock() {
-  locked = !locked;
-  document.getElementById('lockOption').textContent = locked ? 'باز کردن قفل تغییرات' : 'قفل تغییرات';
-  document.getElementById('menu').classList.remove('show');
-  if (locked && deleteMode) cancelDelete();
-  alert(locked ? 'تغییرات قفل شد.' : 'قفل تغییرات باز شد.');
-}
-
-function backup() {
-  const blob = new Blob([JSON.stringify(items, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'lab-inventory-backup.json';
-  a.click();
-  URL.revokeObjectURL(url);
-  document.getElementById('menu').classList.remove('show');
-}
-
-async function restoreBackup(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.onload = async (e) => {
-    try {
-      const data = JSON.parse(e.target.result);
-      if (!Array.isArray(data) || !data.every(x => x && typeof x.name === 'string')) {
-        throw new Error('invalid');
-      }
-      
-      if (!confirm('اطلاعات فعلی با نسخه پشتیبان جایگزین شود؟')) return;
-
-      // پاک کردن دیتابیس فعلی
-      await supabaseClient.from('lab_items').delete().neq('id', 0);
-      
-      // آماده‌سازی داده‌های جدید (حذف id های قدیمی)
-      const cleanData = data.map(({ id, ...rest }) => rest);
-      
-      // درج داده‌های جدید
-      const { error } = await supabaseClient.from('lab_items').insert(cleanData);
-      if (error) throw error;
-
-      alert('بازیابی با موفقیت انجام شد.');
-    } catch {
-      alert('فایل انتخاب‌شده معتبر نیست یا خطایی رخ داد.');
-    }
-  };
-  reader.readAsText(file);
-  event.target.value = '';
-  document.getElementById('menu').classList.remove('show');
-}
-
-function clearSearch() {
-  document.getElementById('search').value = '';
-  document.getElementById('menu').classList.remove('show');
-  render();
-}
-
-// راه‌اندازی اولیه
-loadItems();
-subscribeToChanges();
-</script>
-
-</body>
-</html>
+.add-btn:active {
+  transform:
