@@ -373,6 +373,9 @@ select:focus {
     <button class="menu-button" onclick="toggleMenu()">⋮</button>
 
     <div class="menu" id="menu">
+      <button onclick="setStockStep()">
+  تنظیم مقدار افزایش و کاهش موجودی
+</button>
       <button onclick="toggleDeleteMode()">انتخاب برای حذف</button>
       <button onclick="toggleLock()" id="lockButton">قفل تغییرات</button>
       <button onclick="backupData()">پشتیبان‌گیری</button>
@@ -474,6 +477,7 @@ const STORAGE_KEY = 'lab_inventory_backup';
 let items = [];
 let selectedIds = [];
 let deleteMode = false;
+let stockStep = Number(localStorage.getItem('lab_stock_step')) || 1;
 let locked = false;
 let editingId = null;
 let originalStock = 0;
@@ -494,6 +498,31 @@ function saveLocalBackup() {
 
 function toggleMenu() {
   document.getElementById('menu').classList.toggle('show');
+}
+function setStockStep() {
+  const options = [0.01, 0.1, 0.5, 1, 5, 10, 50, 100];
+
+  const selected = prompt(
+    'مقدار افزایش و کاهش را وارد کن:\n' +
+    '0.01 ، 0.1 ، 0.5 ، 1 ، 5 ، 10 ، 50 ، 100',
+    String(stockStep)
+  );
+
+  if (selected === null) return;
+
+  const value = Number(selected.trim());
+
+  if (!options.includes(value)) {
+    showToast('عدد انتخاب‌شده معتبر نیست');
+    return;
+  }
+
+  stockStep = value;
+  localStorage.setItem('lab_stock_step', String(value));
+
+  document.getElementById('menu').classList.remove('show');
+
+  showToast('مقدار افزایش و کاهش تغییر کرد');
 }
 
 document.addEventListener('click', function(e) {
@@ -716,14 +745,14 @@ function renderItems() {
     if (minus) {
       minus.onclick = e => {
         e.stopPropagation();
-        adjustStock(item.id, -1);
+        adjustStock(item.id, -stockStep);
       };
     }
 
     if (plus) {
       plus.onclick = e => {
         e.stopPropagation();
-        adjustStock(item.id, 1);
+        adjustStock(item.id, stockStep);
       };
     }
 
