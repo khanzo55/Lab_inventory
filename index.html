@@ -707,12 +707,35 @@ function saveItem() {
   closeModal();
   render();
 }
-
+  
 function changeStock(direction) {
   const input = document.getElementById('stockInput');
-  const current = Number(input.value) || 0;
-  input.value = Math.max(0, current + direction * step);
+
+  let current = Number(input.value);
+  if (!Number.isFinite(current)) current = 0;
+
+  // محاسبه با دقت اعشاری ثابت
+  const precision = Math.min(
+    6,
+    Math.max(
+      (String(current).split('.')[1] || '').length,
+      (String(step).split('.')[1] || '').length
+    )
+  );
+  
+  const factor = 10 ** precision;
+
+  const currentInt = Math.round(current * factor);
+  const stepInt = Math.round(step * factor);
+
+  const nextInt = Math.max(
+    0,
+    currentInt + direction * stepInt
+  );
+
+  input.value = (nextInt / factor).toFixed(precision);
 }
+
 
 function setStep(value) {
   step = value;
