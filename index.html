@@ -361,10 +361,87 @@ select:focus {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+/* صفحه ورود و ثبت نام */
+#authScreen {
+  max-width: 410px;
+  margin: 65px auto;
+  padding: 25px;
+  background: white;
+  border: 1px solid #e5ebf1;
+  border-radius: 18px;
+  box-shadow: 0 5px 25px #0000000a;
+}
+
+#authScreen h2 {
+  text-align: center;
+  color: #24577f;
+  font-size: 21px;
+  margin: 5px 0 22px;
+}
+
+#authScreen input {
+  width: 100%;
+  padding: 13px;
+  margin: 7px 0 13px;
+  border: 1px solid #dce4ec;
+  border-radius: 10px;
+  font-family: Tahoma;
+  font-size: 14px;
+  outline: none;
+}
+
+#authScreen button {
+  width: 100%;
+  padding: 13px;
+  border: 0;
+  border-radius: 10px;
+  background: #438fc9;
+  color: white;
+  font-family: Tahoma;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+#authScreen .secondary {
+  background: #edf4fa;
+  color: #24577f;
+}
+
+#authMessage {
+  text-align: center;
+  font-size: 12px;
+  color: #63788c;
+  line-height: 2;
+  margin-top: 14px;
+}
+
+body:not(.authenticated) header,
+body:not(.authenticated) main,
+body:not(.authenticated) .add-button,
+body:not(.authenticated) .delete-bar {
+  display: none !important;
+}
 </style>
 </head>
 
 <body>
+  <div id="authScreen">
+  <h2 id="authTitle">ورود به آزمایشگاه</h2>
+
+  <div id="registerFields" style="display:none">
+    <input id="authName" placeholder="نام و نام خانوادگی">
+  </div>
+
+  <input id="authUsername" placeholder="نام کاربری" autocomplete="username">
+  <input id="authPassword" type="password" placeholder="رمز عبور" autocomplete="current-password">
+
+  <button onclick="submitAuth()">ورود</button>
+  <button class="secondary" id="switchAuth" onclick="switchAuthMode()">
+    ساخت حساب کاربری جدید
+  </button>
+
+  <div id="authMessage"></div>
+</div>
 
 <header>
   <h1>آزمایشگاه</h1>
@@ -469,10 +546,164 @@ select:focus {
 <div id="toast"></div>
 
 <script>
+function switchAuthMode() {
+  authMode = authMode === 'login' ? 'register' : 'login';
+
+  document.getElementById('authTitle').textContent =
+    authMode === 'login' ? 'ورود به آزمایشگاه' : 'ثبت‌نام در آزمایشگاه';
+
+  document.getElementById('registerFields').style.display =
+    authMode === 'register' ? 'block' : 'none';
+
+  document.getElementById('switchAuth').textContent =
+    authMode === 'login'
+      ? 'ساخت حساب کاربری جدید'
+      : 'بازگشت به ورود';
+
+  document.querySelector('#authScreen button:not(.secondary)').textContent =
+    authMode === 'login' ? 'ورود' : 'ثبت‌نام';
+
+  document.getElementById('authMessage').textContent = '';
+}
+
+async function submitAuth() {
+  const username = document.getElementById('authUsername').value.trim();
+  const password = document.getElementById('authPassword').value;
+  const message = document.getElementById('authMessage');
+
+  if (!username || !password) {
+    message.textContent = 'نام کاربری و رمز عبور را وارد کنید';
+    return;
+  }
+
+  try {
+    message.textContent = 'در حال ارتباط با سرور...';
+
+    if (authMode === 'register') {
+      const name = document.getElementById('authName').value.trim();
+
+      if (!name) {
+        message.textContent = 'نام و نام خانوادگی را وارد کنید';
+        return;
+      }
+
+      const result = await apiRequest({
+        action: 'register',
+        name,
+        username,
+        password
+      });
+
+      message.textContent = result.message ||
+        'ثبت‌نام انجام شد؛ منتظر تأیید مدیر بمانید';
+
+      return;
+    }
+
+    const result = await apiRequest({
+      action: 'login',
+      username,
+      password
+    });
+
+    sessionStorage.setItem(TOKEN_KEY, result.session.token);
+
+    document.body.classList.add('authenticated');
+
+    document.getElementById('authPassword').value = '';
+
+    await initialize();
+
+  } catch (error) {
+    message.textContent = error.message || 'خطا در ارتباط با سرور';
+  }
+}
 const API_URL =
 'https://script.google.com/macros/s/AKfycbzNpenH5JLsutLrmHWwd-7DA5IYXdRO4n0a1ARn0M_rQ3dReoJvdbAcLdVRNfnJG_ol/exec';
 
 const STORAGE_KEY = 'lab_inventory_backup';
+  let authMode = 'login';
+const TOKEN_KEY = 'lab_session_token';
+
+function getToken() {
+  return sessionStorage.getItem(TOKEN_KEY) || '';
+}
+
+function createRequestId() {
+  const bytes = new Uint8Array(16);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes)
+    .map(x => x.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+function pollResult(requestId) {
+  return new Promise((resolve, reject) => {
+    const callback = 'result_' + createRequestId();
+    let attempts = 0;
+
+    const script = document.createElement('script');
+
+    const timer = setInterval(() => {
+      attempts++;
+
+      if (attempts > 30) {
+        clearInterval(timer);
+        script.remove();
+        delete window[callback];
+        reject(new Error('پاسخی از سرور دریافت نشد'));
+        return;
+      }
+
+      script.src = API_URL +
+        '?rid=' + requestId +
+        '&callback=' + callback +
+        '&t=' + Date.now();
+
+      script.onerror = () => {
+        clearInterval(timer);
+        script.remove();
+        delete window[callback];
+        reject(new Error('خطا در دریافت پاسخ سرور'));
+      };
+
+      document.body.appendChild(script);
+    }, 500);
+
+    window[callback] = function(result) {
+      if (result && result.pending) return;
+
+      clearInterval(timer);
+      script.remove();
+      delete window[callback];
+      resolve(result);
+    };
+  });
+}
+
+async function apiRequest(payload) {
+  const requestId = createRequestId();
+
+  const body = new URLSearchParams();
+  body.append('payload', JSON.stringify({
+    ...payload,
+    requestId: requestId
+  }));
+
+  await fetch(API_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    body: body
+  });
+
+  const result = await pollResult(requestId);
+
+  if (!result || !result.success) {
+    throw new Error(result?.error || 'عملیات ناموفق بود');
+  }
+
+  return result;
+}
 
 let items = [];
 let selectedIds = [];
@@ -572,7 +803,7 @@ function loadFromServer() {
 
     const script = document.createElement('script');
     script.id = 'dataScript';
-    script.src = API_URL +
+    script.src = API_URL + 
       '?callback=' + callbackName +
       '&t=' + Date.now();
 
@@ -588,15 +819,21 @@ function loadFromServer() {
 }
 
 async function sendToServer(payload) {
-  const body = new URLSearchParams();
-  body.append('payload', JSON.stringify(payload));
-
   try {
-    await fetch(API_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      body: body
+    await apiRequest({
+      ...payload,
+      token: getToken()
     });
+
+    await loadFromServer();
+    return true;
+
+  } catch (error) {
+    console.error(error);
+    showToast(error.message || 'عملیات ناموفق بود');
+    return false;
+  }
+}
 
     await new Promise(resolve => setTimeout(resolve, 900));
     await loadFromServer();
@@ -648,21 +885,30 @@ function findOldItems() {
 }
 
 async function initialize() {
+  if (!getToken()) {
+    document.body.classList.remove('authenticated');
+    return;
+  }
+
   try {
     setStatus('در حال دریافت اطلاعات انبار...');
 
+    await apiRequest({
+      action: 'me',
+      token: getToken()
+    });
+
+    document.body.classList.add('authenticated');
     await loadFromServer();
 
-    if (items.length === 0) {
-      const oldItems = findOldItems();
+  } catch (error) {
+    sessionStorage.removeItem(TOKEN_KEY);
+    document.body.classList.remove('authenticated');
 
-      if (oldItems.length) {
-        setStatus('در حال انتقال اطلاعات قبلی...');
-
-        await sendToServer({
-          action: 'import',
-          items: oldItems
-        });
+    document.getElementById('authMessage').textContent =
+      'نشست شما معتبر نیست؛ دوباره وارد شوید';
+  }
+}
 
         showToast('بررسی انتقال اطلاعات قبلی انجام شد');
       }
@@ -991,8 +1237,10 @@ async function refreshData() {
   try {
     await loadFromServer();
     showToast('اطلاعات به‌روز شد');
+
   } catch (error) {
-    showToast('دریافت اطلاعات ناموفق بود');
+    console.error('خطا در به‌روزرسانی اطلاعات:', error);
+    showToast(error.message || 'دریافت اطلاعات ناموفق بود');
   }
 }
 
