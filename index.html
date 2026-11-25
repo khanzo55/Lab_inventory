@@ -5,454 +5,85 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>آزمایشگاه</title>
-
 <style>
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  background: #f4f7fb;
-  color: #263445;
-  font-family: Tahoma, Arial, sans-serif;
-}
-
-header {
-  background: #dceeff;
-  padding: 22px 18px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: 0 2px 8px #0000000c;
-}
-
-header h1 {
-  font-size: 22px;
-  margin: 0;
-  color: #24577f;
-}
-
-.menu-wrap {
-  position: relative;
-}
-
-.menu-button {
-  border: 0;
-  background: transparent;
-  font-size: 26px;
-  cursor: pointer;
-  color: #24577f;
-}
-
-.menu {
-  display: none;
-  position: absolute;
-  left: 0;
-  top: 38px;
-  width: 205px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 5px 20px #0002;
-  z-index: 20;
-  overflow: hidden;
-}
-
-.menu.show {
-  display: block;
-}
-
-.menu button {
-  width: 100%;
-  padding: 13px;
-  border: 0;
-  background: white;
-  text-align: right;
-  font-family: inherit;
-  cursor: pointer;
-  color: #34495e;
-}
-
-.menu button:hover {
-  background: #eef6ff;
-}
-
-.container {
-  max-width: 1050px;
-  margin: auto;
-  padding: 18px;
-  padding-bottom: 110px;
-}
-
-.search {
-  width: 100%;
-  border: 1px solid #d9e2ec;
-  border-radius: 13px;
-  padding: 14px;
-  font-family: inherit;
-  font-size: 14px;
-  outline: none;
-  background: white;
-  margin-bottom: 16px;
-}
-
-.search:focus,
-input:focus,
-select:focus {
-  border-color: #65a9e8;
-  box-shadow: 0 0 0 3px #65a9e822;
-}
-
-.status {
-  font-size: 12px;
-  color: #738397;
-  margin: 0 2px 14px;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
-  gap: 13px;
-}
-
-.card {
-  background: white;
-  min-height: 145px;
-  border: 1px solid #e5ebf1;
-  border-radius: 15px;
-  padding: 13px;
-  cursor: pointer;
-  transition: .15s;
-  position: relative;
-  overflow: hidden;
-}
-
-.card:hover {
-  background: #eaf5ff;
-  border-color: #b8dcfa;
-  transform: translateY(-2px);
-}
-
-.card.selected {
-  background: #fff0f0;
-  border: 2px solid #e35b5b;
-}
-
-.card h3 {
-  font-size: 14px;
-  margin: 0 0 12px;
-  line-height: 1.8;
-  overflow-wrap: anywhere;
-}
-
-.stock {
-  font-size: 20px;
-  font-weight: bold;
-  color: #286b9e;
-  direction: ltr;
-  text-align: right;
-}
-
-.unit {
-  color: #7c8b99;
-  font-size: 12px;
-  margin-top: 4px;
-}
-
-.location {
-  color: #8794a2;
-  font-size: 11px;
-  margin-top: 10px;
-}
-
-.quick-actions {
-  display: flex;
-  gap: 6px;
-  margin-top: 10px;
-}
-
-.quick-actions button {
-  flex: 1;
-  border: 1px solid #dce6ef;
-  border-radius: 8px;
-  background: #f7fbff;
-  padding: 5px;
-  cursor: pointer;
-  font-size: 15px;
-}
-
-.quick-actions button:hover {
-  background: #dceeff;
-}
-
-.add-button {
-  position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 72px;
-  height: 48px;
-  border-radius: 30px;
-  background: #438fc9;
-  color: white;
-  border: none;
-  font-size: 30px;
-  cursor: pointer;
-  box-shadow: 0 4px 15px #438fc955;
-  z-index: 10;
-}
-
-.delete-bar {
-  display: none;
-  position: fixed;
-  bottom: 24px;
-  right: 15px;
-  left: 15px;
-  max-width: 450px;
-  margin: auto;
-  background: white;
-  padding: 12px;
-  border-radius: 14px;
-  box-shadow: 0 3px 20px #0002;
-  z-index: 11;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-}
-
-.delete-bar.show {
-  display: flex;
-}
-
-.delete-bar button {
-  border: 0;
-  border-radius: 9px;
-  padding: 10px 14px;
-  cursor: pointer;
-  font-family: inherit;
-}
-
-.delete-confirm {
-  background: #e45454;
-  color: white;
-}
-
-.cancel {
-  background: #edf1f5;
-  color: #445;
-}
-
-.footer {
-  text-align: center;
-  color: #9aa6b2;
-  font-size: 11px;
-  margin-top: 35px;
-  line-height: 2;
-}
-
-.modal-bg {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: #17253666;
-  z-index: 30;
-  align-items: center;
-  justify-content: center;
-  padding: 15px;
-}
-
-.modal-bg.show {
-  display: flex;
-}
-
-.modal {
-  background: white;
-  width: 100%;
-  max-width: 420px;
-  border-radius: 17px;
-  padding: 20px;
-  max-height: 90vh;
-  overflow-y: auto;
-}
-
-.modal h2 {
-  font-size: 18px;
-  margin: 0 0 18px;
-}
-
-.field {
-  margin-bottom: 13px;
-}
-
-.field label {
-  display: block;
-  font-size: 12px;
-  margin-bottom: 7px;
-  color: #66788a;
-}
-
-.field input,
-.field select {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #dce4ec;
-  border-radius: 10px;
-  font-family: inherit;
-  font-size: 14px;
-  outline: none;
-  background: white;
-}
-
-.modal-actions {
-  display: flex;
-  gap: 9px;
-  margin-top: 18px;
-}
-
-.modal-actions button {
-  flex: 1;
-  padding: 12px;
-  border: 0;
-  border-radius: 10px;
-  font-family: inherit;
-  cursor: pointer;
-}
-
-.save {
-  background: #438fc9;
-  color: white;
-}
-
-.close {
-  background: #edf1f5;
-  color: #445;
-}
-
-.empty {
-  text-align: center;
-  color: #9aa6b2;
-  padding: 40px 10px;
-  grid-column: 1 / -1;
-}
-
-#toast {
-  position: fixed;
-  bottom: 85px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #263445;
-  color: white;
-  padding: 11px 18px;
-  border-radius: 20px;
-  font-size: 12px;
-  opacity: 0;
-  pointer-events: none;
-  transition: .2s;
-  z-index: 50;
-  white-space: nowrap;
-}
-
-#toast.show {
-  opacity: 1;
-}
-
-@media (max-width: 420px) {
-  .grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-/* صفحه ورود و ثبت نام */
-#authScreen {
-  max-width: 410px;
-  margin: 65px auto;
-  padding: 25px;
-  background: white;
-  border: 1px solid #e5ebf1;
-  border-radius: 18px;
-  box-shadow: 0 5px 25px #0000000a;
-}
-
-#authScreen h2 {
-  text-align: center;
-  color: #24577f;
-  font-size: 21px;
-  margin: 5px 0 22px;
-}
-
-#authScreen input {
-  width: 100%;
-  padding: 13px;
-  margin: 7px 0 13px;
-  border: 1px solid #dce4ec;
-  border-radius: 10px;
-  font-family: Tahoma;
-  font-size: 14px;
-  outline: none;
-}
-
-#authScreen button {
-  width: 100%;
-  padding: 13px;
-  border: 0;
-  border-radius: 10px;
-  background: #438fc9;
-  color: white;
-  font-family: Tahoma;
-  cursor: pointer;
-  margin-top: 8px;
-}
-
-#authScreen .secondary {
-  background: #edf4fa;
-  color: #24577f;
-}
-
-#authMessage {
-  text-align: center;
-  font-size: 12px;
-  color: #63788c;
-  line-height: 2;
-  margin-top: 14px;
-}
-
-body:not(.authenticated) header,
-body:not(.authenticated) main,
-body:not(.authenticated) .add-button,
-body:not(.authenticated) .delete-bar {
-  display: none !important;
-}
+*{box-sizing:border-box}
+body{margin:0;background:#f4f7fb;color:#263445;font-family:Tahoma,Arial,sans-serif}
+header{background:#dceeff;padding:22px 18px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px #0000000c}
+header h1{font-size:22px;margin:0;color:#24577f}
+.menu-wrap{position:relative}
+.menu-button{border:0;background:transparent;font-size:26px;cursor:pointer;color:#24577f}
+.menu{display:none;position:absolute;left:0;top:38px;width:205px;background:white;border-radius:12px;box-shadow:0 5px 20px #0002;z-index:20;overflow:hidden}
+.menu.show{display:block}
+.menu button{width:100%;padding:13px;border:0;background:white;text-align:right;font-family:inherit;cursor:pointer;color:#34495e}
+.menu button:hover{background:#eef6ff}
+.container{max-width:1050px;margin:auto;padding:18px;padding-bottom:110px}
+.search{width:100%;border:1px solid #d9e2ec;border-radius:13px;padding:14px;font-family:inherit;font-size:14px;outline:none;background:white;margin-bottom:16px}
+.search:focus,input:focus,select:focus{border-color:#65a9e8;box-shadow:0 0 0 3px #65a9e822}
+.status{font-size:12px;color:#738397;margin:0 2px 14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:13px}
+.card{background:white;min-height:145px;border:1px solid #e5ebf1;border-radius:15px;padding:13px;cursor:pointer;transition:.15s;position:relative;overflow:hidden}
+.card:hover{background:#eaf5ff;border-color:#b8dcfa;transform:translateY(-2px)}
+.card.selected{background:#fff0f0;border:2px solid #e35b5b}
+.card h3{font-size:14px;margin:0 0 12px;line-height:1.8;overflow-wrap:anywhere}
+.stock{font-size:20px;font-weight:bold;color:#286b9e;direction:ltr;text-align:right}
+.unit{color:#7c8b99;font-size:12px;margin-top:4px}
+.location{color:#8794a2;font-size:11px;margin-top:10px}
+.quick-actions{display:flex;gap:6px;margin-top:10px}
+.quick-actions button{flex:1;border:1px solid #dce6ef;border-radius:8px;background:#f7fbff;padding:5px;cursor:pointer;font-size:15px}
+.quick-actions button:hover{background:#dceeff}
+.add-button{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);width:72px;height:48px;border-radius:30px;background:#438fc9;color:white;border:none;font-size:30px;cursor:pointer;box-shadow:0 4px 15px #438fc955;z-index:10}
+.delete-bar{display:none;position:fixed;bottom:24px;right:15px;left:15px;max-width:450px;margin:auto;background:white;padding:12px;border-radius:14px;box-shadow:0 3px 20px #0002;z-index:11;align-items:center;justify-content:space-between;gap:8px}
+.delete-bar.show{display:flex}
+.delete-bar button{border:0;border-radius:9px;padding:10px 14px;cursor:pointer;font-family:inherit}
+.delete-confirm{background:#e45454;color:white}
+.cancel{background:#edf1f5;color:#445}
+.footer{text-align:center;color:#9aa6b2;font-size:11px;margin-top:35px;line-height:2}
+.modal-bg{display:none;position:fixed;inset:0;background:#17253666;z-index:30;align-items:center;justify-content:center;padding:15px}
+.modal-bg.show{display:flex}
+.modal{background:white;width:100%;max-width:420px;border-radius:17px;padding:20px;max-height:90vh;overflow-y:auto}
+.modal h2{font-size:18px;margin:0 0 18px}
+.field{margin-bottom:13px}
+.field label{display:block;font-size:12px;margin-bottom:7px;color:#66788a}
+.field input,.field select{width:100%;padding:12px;border:1px solid #dce4ec;border-radius:10px;font-family:inherit;font-size:14px;outline:none;background:white}
+.modal-actions{display:flex;gap:9px;margin-top:18px}
+.modal-actions button{flex:1;padding:12px;border:0;border-radius:10px;font-family:inherit;cursor:pointer}
+.save{background:#438fc9;color:white}
+.close{background:#edf1f5;color:#445}
+.empty{text-align:center;color:#9aa6b2;padding:40px 10px;grid-column:1/-1}
+#toast{position:fixed;bottom:85px;left:50%;transform:translateX(-50%);background:#263445;color:white;padding:11px 18px;border-radius:20px;font-size:12px;opacity:0;pointer-events:none;transition:.2s;z-index:50;white-space:nowrap}
+#toast.show{opacity:1}
+@media(max-width:420px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+#authScreen{max-width:410px;margin:65px auto;padding:25px;background:white;border:1px solid #e5ebf1;border-radius:18px;box-shadow:0 5px 25px #0000000a}
+#authScreen h2{text-align:center;color:#24577f;font-size:21px;margin:5px 0 22px}
+#authScreen input{width:100%;padding:13px;margin:7px 0 13px;border:1px solid #dce4ec;border-radius:10px;font-family:Tahoma;font-size:14px;outline:none}
+#authScreen button{width:100%;padding:13px;border:0;border-radius:10px;background:#438fc9;color:white;font-family:Tahoma;cursor:pointer;margin-top:8px}
+#authScreen button:disabled{opacity:.6;cursor:wait}
+#authScreen .secondary{background:#edf4fa;color:#24577f}
+#authMessage{text-align:center;font-size:12px;color:#63788c;line-height:2;margin-top:14px;overflow-wrap:anywhere}
+body:not(.authenticated) header,body:not(.authenticated) main,body:not(.authenticated) .add-button,body:not(.authenticated) .delete-bar{display:none!important}
+body.authenticated #authScreen{display:none}
 </style>
 </head>
-
 <body>
-  <div id="authScreen">
+
+<div id="authScreen">
   <h2 id="authTitle">ورود به آزمایشگاه</h2>
-
   <div id="registerFields" style="display:none">
-    <input id="authName" placeholder="نام و نام خانوادگی">
+    <input id="authName" placeholder="نام و نام خانوادگی" autocomplete="name">
   </div>
-
   <input id="authUsername" placeholder="نام کاربری" autocomplete="username">
   <input id="authPassword" type="password" placeholder="رمز عبور" autocomplete="current-password">
-
-  <button onclick="submitAuth()">ورود</button>
-  <button class="secondary" id="switchAuth" onclick="switchAuthMode()">
-    ساخت حساب کاربری جدید
-  </button>
-
+  <button id="authSubmitButton" onclick="submitAuth()">ورود</button>
+  <button class="secondary" id="switchAuth" onclick="switchAuthMode()">ساخت حساب کاربری جدید</button>
   <div id="authMessage"></div>
 </div>
 
 <header>
   <h1>آزمایشگاه</h1>
-
   <div class="menu-wrap">
     <button class="menu-button" onclick="toggleMenu()">⋮</button>
-
     <div class="menu" id="menu">
-      <button onclick="setStockStep()">
-  تنظیم مقدار افزایش و کاهش موجودی
-</button>
+      <button onclick="setStockStep()">تنظیم مقدار افزایش و کاهش موجودی</button>
       <button onclick="toggleDeleteMode()">انتخاب برای حذف</button>
       <button onclick="toggleLock()" id="lockButton">قفل تغییرات</button>
       <button onclick="backupData()">پشتیبان‌گیری</button>
@@ -463,23 +94,10 @@ body:not(.authenticated) .delete-bar {
 </header>
 
 <main class="container">
-
-  <input
-    class="search"
-    id="search"
-    placeholder="جست‌وجوی نام ماده..."
-    oninput="renderItems()"
-  >
-
+  <input class="search" id="search" placeholder="جست‌وجوی نام ماده..." oninput="renderItems()">
   <div class="status" id="status">در حال اتصال به انبار...</div>
-
   <section class="grid" id="grid"></section>
-
-  <div class="footer">
-    لطفاً پس از استفاده، مواد را در جای خود قرار دهید.<br>
-    با تشکر
-  </div>
-
+  <div class="footer">لطفاً پس از استفاده، مواد را در جای خود قرار دهید.<br>با تشکر</div>
 </main>
 
 <button class="add-button" id="addButton" onclick="openAdd()">+</button>
@@ -493,41 +111,16 @@ body:not(.authenticated) .delete-bar {
 <div class="modal-bg" id="modalBg">
   <div class="modal">
     <h2 id="modalTitle">افزودن ماده</h2>
-
-    <div class="field">
-      <label>نام ماده</label>
-      <input id="nameInput" placeholder="نام ماده را وارد کنید">
-    </div>
-
-    <div class="field">
-      <label>موجودی</label>
-      <input id="stockInput" type="number" min="0" step="0.01" value="0">
-    </div>
-
+    <div class="field"><label>نام ماده</label><input id="nameInput" placeholder="نام ماده را وارد کنید"></div>
+    <div class="field"><label>موجودی</label><input id="stockInput" type="number" min="0" step="0.01" value="0"></div>
     <div class="field">
       <label>واحد</label>
       <select id="unitInput">
-        <option>گرم</option>
-        <option>کیلوگرم</option>
-        <option>میلی‌لیتر</option>
-        <option>لیتر</option>
-        <option>عدد</option>
-        <option>بسته</option>
-        <option>متر</option>
-        <option>سانتی‌متر</option>
+        <option>گرم</option><option>کیلوگرم</option><option>میلی‌لیتر</option><option>لیتر</option><option>عدد</option><option>بسته</option><option>متر</option><option>سانتی‌متر</option>
       </select>
     </div>
-
-    <div class="field">
-      <label>محل نگهداری</label>
-      <input id="locationInput" placeholder="مثلاً قفسه ۱">
-    </div>
-
-    <div class="field">
-      <label>دسته‌بندی</label>
-      <input id="categoryInput" placeholder="مثلاً حلال‌ها">
-    </div>
-
+    <div class="field"><label>محل نگهداری</label><input id="locationInput" placeholder="مثلاً قفسه ۱"></div>
+    <div class="field"><label>دسته‌بندی</label><input id="categoryInput" placeholder="مثلاً حلال‌ها"></div>
     <div class="modal-actions">
       <button class="close" onclick="closeModal()">انصراف</button>
       <button class="save" id="saveButton" onclick="saveItem()">ذخیره</button>
@@ -535,176 +128,17 @@ body:not(.authenticated) .delete-bar {
   </div>
 </div>
 
-<input
-  type="file"
-  id="restoreFile"
-  accept=".json,application/json"
-  style="display:none"
-  onchange="restoreData(event)"
->
-
+<input type="file" id="restoreFile" accept=".json,application/json" style="display:none" onchange="restoreData(event)">
 <div id="toast"></div>
 
 <script>
-function switchAuthMode() {
-  authMode = authMode === 'login' ? 'register' : 'login';
+'use strict';
 
-  document.getElementById('authTitle').textContent =
-    authMode === 'login' ? 'ورود به آزمایشگاه' : 'ثبت‌نام در آزمایشگاه';
-
-  document.getElementById('registerFields').style.display =
-    authMode === 'register' ? 'block' : 'none';
-
-  document.getElementById('switchAuth').textContent =
-    authMode === 'login'
-      ? 'ساخت حساب کاربری جدید'
-      : 'بازگشت به ورود';
-
-  document.querySelector('#authScreen button:not(.secondary)').textContent =
-    authMode === 'login' ? 'ورود' : 'ثبت‌نام';
-
-  document.getElementById('authMessage').textContent = '';
-}
-
-async function submitAuth() {
-  const username = document.getElementById('authUsername').value.trim();
-  const password = document.getElementById('authPassword').value;
-  const message = document.getElementById('authMessage');
-
-  if (!username || !password) {
-    message.textContent = 'نام کاربری و رمز عبور را وارد کنید';
-    return;
-  }
-
-  try {
-    message.textContent = 'در حال ارتباط با سرور...';
-
-    if (authMode === 'register') {
-      const name = document.getElementById('authName').value.trim();
-
-      if (!name) {
-        message.textContent = 'نام و نام خانوادگی را وارد کنید';
-        return;
-      }
-
-      const result = await apiRequest({
-        action: 'register',
-        name,
-        username,
-        password
-      });
-
-      message.textContent = result.message ||
-        'ثبت‌نام انجام شد؛ منتظر تأیید مدیر بمانید';
-
-      return;
-    }
-
-    const result = await apiRequest({
-      action: 'login',
-      username,
-      password
-    });
-
-    sessionStorage.setItem(TOKEN_KEY, result.session.token);
-
-    document.body.classList.add('authenticated');
-
-    document.getElementById('authPassword').value = '';
-
-    await initialize();
-
-  } catch (error) {
-    message.textContent = error.message || 'خطا در ارتباط با سرور';
-  }
-}
-const API_URL =
-'https://script.google.com/macros/s/AKfycbzNpenH5JLsutLrmHWwd-7DA5IYXdRO4n0a1ARn0M_rQ3dReoJvdbAcLdVRNfnJG_ol/exec';
-
+const API_URL = 'https://script.google.com/macros/s/AKfycbzNpenH5JLsutLrmHWwd-7DA5IYXdRO4n0a1ARn0M_rQ3dReoJvdbAcLdVRNfnJG_ol/exec';
 const STORAGE_KEY = 'lab_inventory_backup';
-  let authMode = 'login';
 const TOKEN_KEY = 'lab_session_token';
 
-function getToken() {
-  return sessionStorage.getItem(TOKEN_KEY) || '';
-}
-
-function createRequestId() {
-  const bytes = new Uint8Array(16);
-  crypto.getRandomValues(bytes);
-  return Array.from(bytes)
-    .map(x => x.toString(16).padStart(2, '0'))
-    .join('');
-}
-
-function pollResult(requestId) {
-  return new Promise((resolve, reject) => {
-    const callback = 'result_' + createRequestId();
-    let attempts = 0;
-
-    const script = document.createElement('script');
-
-    const timer = setInterval(() => {
-      attempts++;
-
-      if (attempts > 30) {
-        clearInterval(timer);
-        script.remove();
-        delete window[callback];
-        reject(new Error('پاسخی از سرور دریافت نشد'));
-        return;
-      }
-
-      script.src = API_URL +
-        '?rid=' + requestId +
-        '&callback=' + callback +
-        '&t=' + Date.now();
-
-      script.onerror = () => {
-        clearInterval(timer);
-        script.remove();
-        delete window[callback];
-        reject(new Error('خطا در دریافت پاسخ سرور'));
-      };
-
-      document.body.appendChild(script);
-    }, 500);
-
-    window[callback] = function(result) {
-      if (result && result.pending) return;
-
-      clearInterval(timer);
-      script.remove();
-      delete window[callback];
-      resolve(result);
-    };
-  });
-}
-
-async function apiRequest(payload) {
-  const requestId = createRequestId();
-
-  const body = new URLSearchParams();
-  body.append('payload', JSON.stringify({
-    ...payload,
-    requestId: requestId
-  }));
-
-  await fetch(API_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    body: body
-  });
-
-  const result = await pollResult(requestId);
-
-  if (!result || !result.success) {
-    throw new Error(result?.error || 'عملیات ناموفق بود');
-  }
-
-  return result;
-}
-
+let authMode = 'login';
 let items = [];
 let selectedIds = [];
 let deleteMode = false;
@@ -715,136 +149,223 @@ let originalStock = 0;
 let loading = false;
 let lastServerUpdate = 0;
 
+function getToken() {
+  return sessionStorage.getItem(TOKEN_KEY) || '';
+}
+
+function createRequestId() {
+  const bytes = new Uint8Array(16);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('');
+}
+
+function pollResult(requestId) {
+  return new Promise((resolve, reject) => {
+    const callbackName = 'result_' + createRequestId();
+    const startedAt = Date.now();
+    let finished = false;
+    let activeScript = null;
+
+    function cleanup() {
+      if (activeScript) activeScript.remove();
+      delete window[callbackName];
+    }
+
+    function fail(message) {
+      if (finished) return;
+      finished = true;
+      cleanup();
+      reject(new Error(message));
+    }
+
+    window[callbackName] = function(result) {
+      if (finished) return;
+      if (result && result.pending) {
+        if (activeScript) {
+          activeScript.remove();
+          activeScript = null;
+        }
+        return;
+      }
+      finished = true;
+      cleanup();
+      resolve(result);
+    };
+
+    function poll() {
+      if (finished) return;
+      if (Date.now() - startedAt > 18000) {
+        fail('پاسخی از سرور دریافت نشد؛ اتصال یا انتشار برنامه را بررسی کنید');
+        return;
+      }
+
+      if (activeScript) activeScript.remove();
+
+      const script = document.createElement('script');
+      activeScript = script;
+      script.onerror = function() {
+        fail('خطا در دریافت پاسخ سرور');
+      };
+      script.src = API_URL + '?rid=' + encodeURIComponent(requestId) +
+        '&callback=' + encodeURIComponent(callbackName) +
+        '&t=' + Date.now();
+      document.body.appendChild(script);
+
+      setTimeout(() => {
+        if (!finished && activeScript === script) {
+          script.remove();
+          activeScript = null;
+          poll();
+        }
+      }, 600);
+    }
+
+    poll();
+  });
+}
+
+async function apiRequest(payload) {
+  const requestId = createRequestId();
+  const body = new URLSearchParams();
+  body.append('payload', JSON.stringify({ ...payload, requestId }));
+
+  await fetch(API_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    body
+  });
+
+  const result = await pollResult(requestId);
+
+  if (!result || !result.success) {
+    throw new Error((result && result.error) || 'عملیات ناموفق بود');
+  }
+  return result;
+}
+
 function showToast(message) {
   const toast = document.getElementById('toast');
   toast.textContent = message;
   toast.classList.add('show');
-
   setTimeout(() => toast.classList.remove('show'), 2300);
+}
+
+function setStatus(message) {
+  document.getElementById('status').textContent = message;
 }
 
 function saveLocalBackup() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
 }
 
-function toggleMenu() {
-  document.getElementById('menu').classList.toggle('show');
+function switchAuthMode() {
+  authMode = authMode === 'login' ? 'register' : 'login';
+  document.getElementById('authTitle').textContent =
+    authMode === 'login' ? 'ورود به آزمایشگاه' : 'ثبت‌نام در آزمایشگاه';
+  document.getElementById('registerFields').style.display =
+    authMode === 'register' ? 'block' : 'none';
+  document.getElementById('switchAuth').textContent =
+    authMode === 'login' ? 'ساخت حساب کاربری جدید' : 'بازگشت به ورود';
+  document.getElementById('authSubmitButton').textContent =
+    authMode === 'login' ? 'ورود' : 'ثبت‌نام';
+  document.getElementById('authPassword').value = '';
+  document.getElementById('authMessage').textContent = '';
 }
-function setStockStep() {
-  const options = [0.01, 0.1, 0.5, 1, 5, 10, 50, 100];
 
-  const selected = prompt(
-    'مقدار افزایش و کاهش را وارد کن:\n' +
-    '0.01 ، 0.1 ، 0.5 ، 1 ، 5 ، 10 ، 50 ، 100',
-    String(stockStep)
-  );
+async function submitAuth() {
+  const username = document.getElementById('authUsername').value.trim();
+  const password = document.getElementById('authPassword').value;
+  const message = document.getElementById('authMessage');
+  const button = document.getElementById('authSubmitButton');
 
-  if (selected === null) return;
-
-  const value = Number(selected.trim());
-
-  if (!options.includes(value)) {
-    showToast('عدد انتخاب‌شده معتبر نیست');
+  if (!username || !password) {
+    message.textContent = 'نام کاربری و رمز عبور را وارد کنید';
     return;
   }
 
-  stockStep = value;
-  localStorage.setItem('lab_stock_step', String(value));
-
-  document.getElementById('menu').classList.remove('show');
-
-  showToast('مقدار افزایش و کاهش تغییر کرد');
-}
-
-document.addEventListener('click', function(e) {
-  if (!e.target.closest('.menu-wrap')) {
-    document.getElementById('menu').classList.remove('show');
+  if (authMode === 'register') {
+    const name = document.getElementById('authName').value.trim();
+    if (!name) {
+      message.textContent = 'نام و نام خانوادگی را وارد کنید';
+      return;
+    }
   }
-});
 
-function setStatus(message) {
-  document.getElementById('status').textContent = message;
+  button.disabled = true;
+  button.textContent = 'لطفاً صبر کنید...';
+
+  try {
+    message.textContent = 'در حال ارتباط با سرور...';
+
+    if (authMode === 'register') {
+      const name = document.getElementById('authName').value.trim();
+      const result = await apiRequest({ action: 'register', name, username, password });
+      message.textContent = result.message || 'ثبت‌نام انجام شد؛ منتظر تأیید مدیر بمانید';
+      document.getElementById('authPassword').value = '';
+      return;
+    }
+
+    const result = await apiRequest({ action: 'login', username, password });
+    if (!result.session || !result.session.token) {
+      throw new Error('پاسخ ورود از سرور معتبر نیست');
+    }
+    sessionStorage.setItem(TOKEN_KEY, result.session.token);
+    document.getElementById('authPassword').value = '';
+    await initialize();
+  } catch (error) {
+    message.textContent = error.message || 'خطا در ارتباط با سرور';
+  } finally {
+    button.disabled = false;
+    button.textContent = authMode === 'login' ? 'ورود' : 'ثبت‌نام';
+  }
 }
 
-function loadFromServer() {
-  return new Promise((resolve, reject) => {
-    const callbackName = 'receiveData';
-
-    const oldScript = document.getElementById('dataScript');
-    if (oldScript) oldScript.remove();
-
-    let finished = false;
-
-    const timer = setTimeout(() => {
-      if (finished) return;
-      finished = true;
-      reject(new Error('زمان اتصال تمام شد'));
-    }, 15000);
-
-    window[callbackName] = function(data) {
-      if (finished) return;
-      finished = true;
-      clearTimeout(timer);
-
-      if (!data || !data.success) {
-        reject(new Error('دریافت اطلاعات ناموفق بود'));
-        return;
-      }
-
-      items = Array.isArray(data.items) ? data.items : [];
-      lastServerUpdate = Date.now();
-
-      saveLocalBackup();
-      renderItems();
-      setStatus('اتصال برقرار است · ' + items.length + ' ماده');
-
-      resolve(items);
-    };
-
-    const script = document.createElement('script');
-    script.id = 'dataScript';
-    script.src = API_URL + 
-      '?callback=' + callbackName +
-      '&t=' + Date.now();
-
-    script.onerror = function() {
-      if (finished) return;
-      finished = true;
-      clearTimeout(timer);
-      reject(new Error('خطا در دریافت اطلاعات'));
-    };
-
-    document.body.appendChild(script);
-  });
+async function loadFromServer() {
+  const result = await apiRequest({ action: 'list', token: getToken() });
+  items = Array.isArray(result.items) ? result.items : [];
+  lastServerUpdate = Date.now();
+  saveLocalBackup();
+  renderItems();
+  setStatus('اتصال برقرار است · ' + items.length + ' ماده');
+  return items;
 }
 
 async function sendToServer(payload) {
   try {
-    await apiRequest({
-      ...payload,
-      token: getToken()
-    });
-
+    await apiRequest({ ...payload, token: getToken() });
     await loadFromServer();
     return true;
-
   } catch (error) {
-    console.error(error);
+    console.error('خطا در ارسال اطلاعات:', error);
     showToast(error.message || 'عملیات ناموفق بود');
     return false;
   }
 }
 
-    await new Promise(resolve => setTimeout(resolve, 900));
-    await loadFromServer();
-
-    return true;
-  } catch (error) {
-    console.error(error);
-    showToast('ارسال انجام شد؛ دریافت اطلاعات را دوباره بررسی کنید');
-    return false;
-  }
+function toggleMenu() {
+  document.getElementById('menu').classList.toggle('show');
 }
+
+function setStockStep() {
+  const options = [0.01, 0.1, 0.5, 1, 5, 10, 50, 100];
+  const selected = prompt('مقدار افزایش و کاهش را وارد کن:\n0.01 ، 0.1 ، 0.5 ، 1 ، 5 ، 10 ، 50 ، 100', String(stockStep));
+  if (selected === null) return;
+  const value = Number(selected.trim());
+  if (!options.includes(value)) {
+    showToast('عدد انتخاب‌شده معتبر نیست');
+    return;
+  }
+  stockStep = value;
+  localStorage.setItem('lab_stock_step', String(value));
+  document.getElementById('menu').classList.remove('show');
+  showToast('مقدار افزایش و کاهش تغییر کرد');
+}
+
+document.addEventListener('click', function(event) {
+  if (!event.target.closest('.menu-wrap')) {
+    document.getElementById('menu').classList.remove('show');
+  }
+});
 
 function normalizeItem(item) {
   return {
@@ -857,93 +378,15 @@ function normalizeItem(item) {
   };
 }
 
-function findOldItems() {
-  const possibleKeys = [
-    'lab_inventory',
-    'labInventory',
-    'labItems',
-    'items',
-    'materials',
-    'inventory',
-    'lab_inventory_v1'
-  ];
-
-  for (const key of possibleKeys) {
-    try {
-      const value = JSON.parse(localStorage.getItem(key) || 'null');
-
-      if (Array.isArray(value) && value.length) {
-        const converted = value.map(normalizeItem)
-          .filter(item => item.name);
-
-        if (converted.length) return converted;
-      }
-    } catch (e) {}
-  }
-
-  return [];
-}
-
-async function initialize() {
-  if (!getToken()) {
-    document.body.classList.remove('authenticated');
-    return;
-  }
-
-  try {
-    setStatus('در حال دریافت اطلاعات انبار...');
-
-    await apiRequest({
-      action: 'me',
-      token: getToken()
-    });
-
-    document.body.classList.add('authenticated');
-    await loadFromServer();
-
-  } catch (error) {
-    sessionStorage.removeItem(TOKEN_KEY);
-    document.body.classList.remove('authenticated');
-
-    document.getElementById('authMessage').textContent =
-      'نشست شما معتبر نیست؛ دوباره وارد شوید';
-  }
-}
-
-        showToast('بررسی انتقال اطلاعات قبلی انجام شد');
-      }
-    }
-  } catch (error) {
-    console.error(error);
-
-    const local = JSON.parse(
-      localStorage.getItem(STORAGE_KEY) || '[]'
-    );
-
-    if (Array.isArray(local)) {
-      items = local;
-      renderItems();
-    }
-
-    setStatus('اتصال به انبار برقرار نشد؛ اتصال اینترنت را بررسی کنید');
-  }
-}
-
 function escapeHTML(value) {
   return String(value ?? '').replace(/[&<>"']/g, char => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#039;'
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
   })[char]);
 }
 
 function renderItems() {
   const grid = document.getElementById('grid');
-  const search = document.getElementById('search').value
-    .trim().toLowerCase();
-
+  const search = document.getElementById('search').value.trim().toLowerCase();
   const filtered = items.filter(item =>
     String(item.name).toLowerCase().includes(search) ||
     String(item.category).toLowerCase().includes(search) ||
@@ -951,96 +394,68 @@ function renderItems() {
   );
 
   grid.innerHTML = '';
-
   if (!filtered.length) {
     grid.innerHTML = '<div class="empty">ماده‌ای پیدا نشد</div>';
+    document.getElementById('addButton').style.display = locked || deleteMode ? 'none' : 'block';
     return;
   }
 
   filtered.forEach(item => {
     const card = document.createElement('div');
-
-    card.className = 'card' +
-      (selectedIds.includes(item.id) ? ' selected' : '');
-
-    if (deleteMode) {
-      card.onclick = () => selectForDelete(item.id);
-    } else {
-      card.onclick = () => openEdit(item.id);
-    }
-
+    card.className = 'card' + (selectedIds.includes(item.id) ? ' selected' : '');
+    card.onclick = () => deleteMode ? selectForDelete(item.id) : openEdit(item.id);
     card.innerHTML = `
       <h3>${escapeHTML(item.name)}</h3>
       <div class="stock">${Number(item.stock).toLocaleString('fa-IR')}</div>
       <div class="unit">${escapeHTML(item.unit)}</div>
-      <div class="location">
-        ${escapeHTML(item.location)}
-        ${item.category ? ' · ' + escapeHTML(item.category) : ''}
-      </div>
-      ${!locked && !deleteMode ? `
-        <div class="quick-actions">
-          <button title="کاهش موجودی" data-action="minus">−</button>
-          <button title="افزایش موجودی" data-action="plus">+</button>
-        </div>
-      ` : ''}
+      <div class="location">${escapeHTML(item.location)}${item.category ? ' · ' + escapeHTML(item.category) : ''}</div>
+      ${!locked && !deleteMode ? `<div class="quick-actions">
+        <button title="کاهش موجودی" data-action="minus">−</button>
+        <button title="افزایش موجودی" data-action="plus">+</button>
+      </div>` : ''}
     `;
 
     const minus = card.querySelector('[data-action="minus"]');
     const plus = card.querySelector('[data-action="plus"]');
-
-    if (minus) {
-      minus.onclick = e => {
-        e.stopPropagation();
-        adjustStock(item.id, -stockStep);
-      };
-    }
-
-    if (plus) {
-      plus.onclick = e => {
-        e.stopPropagation();
-        adjustStock(item.id, stockStep);
-      };
-    }
-
+    if (minus) minus.onclick = event => {
+      event.stopPropagation();
+      adjustStock(item.id, -stockStep);
+    };
+    if (plus) plus.onclick = event => {
+      event.stopPropagation();
+      adjustStock(item.id, stockStep);
+    };
     grid.appendChild(card);
   });
 
-  document.getElementById('addButton').style.display =
-    locked || deleteMode ? 'none' : 'block';
+  document.getElementById('addButton').style.display = locked || deleteMode ? 'none' : 'block';
 }
 
 function openAdd() {
   if (locked) return showToast('تغییرات قفل است');
-
   editingId = null;
   originalStock = 0;
-
   document.getElementById('modalTitle').textContent = 'افزودن ماده';
   document.getElementById('nameInput').value = '';
   document.getElementById('stockInput').value = '0';
   document.getElementById('unitInput').value = 'گرم';
   document.getElementById('locationInput').value = '';
   document.getElementById('categoryInput').value = '';
-
   document.getElementById('modalBg').classList.add('show');
 }
 
 function openEdit(id) {
   if (locked) return showToast('تغییرات قفل است');
-
-  const item = items.find(x => x.id === id);
+  const item = items.find(entry => entry.id === id);
   if (!item) return;
-
   editingId = id;
   originalStock = Number(item.stock) || 0;
-
   document.getElementById('modalTitle').textContent = 'ویرایش ماده';
   document.getElementById('nameInput').value = item.name;
   document.getElementById('stockInput').value = item.stock;
   document.getElementById('unitInput').value = item.unit || 'گرم';
   document.getElementById('locationInput').value = item.location || '';
   document.getElementById('categoryInput').value = item.category || '';
-
   document.getElementById('modalBg').classList.add('show');
 }
 
@@ -1050,19 +465,14 @@ function closeModal() {
 
 async function saveItem() {
   if (locked) return showToast('تغییرات قفل است');
-
   const name = document.getElementById('nameInput').value.trim();
   const stock = Number(document.getElementById('stockInput').value);
-
   if (!name) return showToast('نام ماده را وارد کنید');
-
-  if (!Number.isFinite(stock) || stock < 0) {
-    return showToast('موجودی نامعتبر است');
-  }
+  if (!Number.isFinite(stock) || stock < 0) return showToast('موجودی نامعتبر است');
 
   const item = {
-    name: name,
-    stock: stock,
+    name,
+    stock,
     unit: document.getElementById('unitInput').value,
     location: document.getElementById('locationInput').value.trim(),
     category: document.getElementById('categoryInput').value.trim()
@@ -1073,26 +483,16 @@ async function saveItem() {
   button.textContent = 'در حال ذخیره...';
 
   try {
+    let success;
     if (editingId) {
       const delta = Math.round((stock - originalStock) * 1000000) / 1000000;
-
-      await sendToServer({
-        action: 'save',
-        id: editingId,
-        item: item,
-        delta: delta
-      });
+      success = await sendToServer({ action: 'save', id: editingId, item, delta });
     } else {
-      await sendToServer({
-        action: 'add',
-        item: item
-      });
+      success = await sendToServer({ action: 'add', item });
     }
-
+    if (!success) return;
     closeModal();
-    showToast('درخواست ذخیره ارسال شد');
-  } catch (error) {
-    showToast('ذخیره اطلاعات ناموفق بود');
+    showToast('اطلاعات با موفقیت ذخیره شد');
   } finally {
     button.disabled = false;
     button.textContent = 'ذخیره';
@@ -1101,12 +501,7 @@ async function saveItem() {
 
 async function adjustStock(id, delta) {
   if (locked) return showToast('تغییرات قفل است');
-
-  await sendToServer({
-    action: 'adjust',
-    id: id,
-    delta: delta
-  });
+  await sendToServer({ action: 'adjust', id, delta });
 }
 
 function toggleDeleteMode() {
@@ -1114,28 +509,17 @@ function toggleDeleteMode() {
     showToast('ابتدا قفل تغییرات را باز کنید');
     return;
   }
-
   deleteMode = !deleteMode;
   selectedIds = [];
-
-  document.getElementById('deleteBar').classList.toggle(
-    'show',
-    deleteMode
-  );
-
+  document.getElementById('deleteBar').classList.toggle('show', deleteMode);
   document.getElementById('menu').classList.remove('show');
-
   renderItems();
   updateSelectedCount();
 }
 
 function selectForDelete(id) {
-  if (selectedIds.includes(id)) {
-    selectedIds = selectedIds.filter(x => x !== id);
-  } else {
-    selectedIds.push(id);
-  }
-
+  if (selectedIds.includes(id)) selectedIds = selectedIds.filter(value => value !== id);
+  else selectedIds.push(id);
   renderItems();
   updateSelectedCount();
 }
@@ -1148,35 +532,24 @@ function updateSelectedCount() {
 function cancelDelete() {
   deleteMode = false;
   selectedIds = [];
-
   document.getElementById('deleteBar').classList.remove('show');
   renderItems();
 }
 
 async function deleteSelected() {
-  if (!selectedIds.length) {
-    return showToast('ماده‌ای انتخاب نشده است');
-  }
-
+  if (!selectedIds.length) return showToast('ماده‌ای انتخاب نشده است');
   if (!confirm('مواد انتخاب‌شده حذف شوند؟')) return;
-
-  await sendToServer({
-    action: 'delete',
-    ids: selectedIds
-  });
-
+  const success = await sendToServer({ action: 'delete', ids: selectedIds });
+  if (!success) return;
   cancelDelete();
-  showToast('درخواست حذف ارسال شد');
+  showToast('مواد انتخاب‌شده حذف شدند');
 }
 
 function toggleLock() {
   locked = !locked;
-
   document.getElementById('lockButton').textContent =
     locked ? 'باز کردن قفل تغییرات' : 'قفل تغییرات';
-
   document.getElementById('menu').classList.remove('show');
-
   renderItems();
   showToast(locked ? 'تغییرات قفل شد' : 'قفل تغییرات باز شد');
 }
@@ -1185,86 +558,86 @@ function backupData() {
   const data = JSON.stringify(items, null, 2);
   const blob = new Blob([data], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
-
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'backup-laboratory.json';
-  a.click();
-
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'backup-laboratory.json';
+  link.click();
   URL.revokeObjectURL(url);
   showToast('پشتیبان تهیه شد');
 }
 
-function restoreData(event) {
+async function restoreData(event) {
   const file = event.target.files[0];
   if (!file) return;
+  try {
+    const restored = JSON.parse(await file.text());
+    if (!Array.isArray(restored)) throw new Error('فایل نامعتبر است');
+    if (!confirm('اطلاعات فایل به انبار اضافه شود؟')) return;
 
-  const reader = new FileReader();
-
-  reader.onload = async function() {
-    try {
-      const restored = JSON.parse(reader.result);
-
-      if (!Array.isArray(restored)) {
-        throw new Error('فایل نامعتبر است');
-      }
-
-      if (!confirm('اطلاعات فایل به انبار اضافه شود؟')) return;
-
-      for (const raw of restored) {
-        const item = normalizeItem(raw);
-
-        if (!item.name) continue;
-
-        await sendToServer({
-          action: 'add',
-          item: item
-        });
-      }
-
-      showToast('بازیابی اطلاعات انجام شد');
-    } catch (error) {
-      showToast('فایل پشتیبان معتبر نیست');
+    for (const raw of restored) {
+      const item = normalizeItem(raw);
+      if (!item.name) continue;
+      const success = await sendToServer({ action: 'add', item });
+      if (!success) throw new Error('ثبت یکی از مواد انجام نشد');
     }
-
+    showToast('بازیابی اطلاعات انجام شد');
+  } catch (error) {
+    showToast(error.message || 'فایل پشتیبان معتبر نیست');
+  } finally {
     event.target.value = '';
-  };
-
-  reader.readAsText(file);
+  }
 }
 
 async function refreshData() {
+  if (!getToken()) return;
   try {
     await loadFromServer();
     showToast('اطلاعات به‌روز شد');
-
   } catch (error) {
     console.error('خطا در به‌روزرسانی اطلاعات:', error);
     showToast(error.message || 'دریافت اطلاعات ناموفق بود');
   }
 }
 
-// دریافت تغییرات سایر کاربران به صورت خودکار
+async function initialize() {
+  const token = getToken();
+  if (!token) {
+    document.body.classList.remove('authenticated');
+    return;
+  }
+
+  try {
+    setStatus('در حال بررسی ورود...');
+    await apiRequest({ action: 'me', token });
+    document.body.classList.add('authenticated');
+    await loadFromServer();
+    document.getElementById('authMessage').textContent = '';
+  } catch (error) {
+    sessionStorage.removeItem(TOKEN_KEY);
+    document.body.classList.remove('authenticated');
+    document.getElementById('authMessage').textContent =
+      'نشست معتبر نیست یا ارتباط با سرور برقرار نشد؛ دوباره وارد شوید';
+    console.error('خطا در بررسی نشست:', error);
+  }
+}
+
 setInterval(async () => {
-  if (loading || document.hidden) return;
-
+  if (!getToken() || loading || document.hidden || !document.body.classList.contains('authenticated')) return;
   loading = true;
-
   try {
     await loadFromServer();
   } catch (error) {
-    console.log('خطا در به‌روزرسانی خودکار');
+    console.log('خطا در به‌روزرسانی خودکار:', error);
   } finally {
     loading = false;
   }
 }, 5000);
 
 document.addEventListener('visibilitychange', () => {
-  if (!document.hidden) refreshData();
+  if (!document.hidden && getToken()) refreshData();
 });
 
 initialize();
 </script>
-
 </body>
 </html>
